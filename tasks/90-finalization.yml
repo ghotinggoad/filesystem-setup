@@ -11,6 +11,7 @@
         var: devices.stdout_lines
 
 - name: Remove Installed Packages
+  become: true
   ansible.builtin.package:
     name: "{{ missing_packages }}"
     state: absent

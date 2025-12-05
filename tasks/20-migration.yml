@@ -23,11 +23,11 @@
     dest: "/mnt{{ item.value.mount_target }}/"
     archive: true
     rsync_opts:
-      - "--acls"
-      - "--hard-links"
-      - "--numeric-ids"
-      - "--one-file-system"
-      - "--xattrs"
+      - --acls
+      - --hard-links
+      - --numeric-ids
+      - --one-file-system
+      - --xattrs
   loop: "{{ lvs | dict2items }}"
   delegate_to: "{{ inventory_hostname }}"
 
