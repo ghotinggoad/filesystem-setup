@@ -1,4 +1,9 @@
 ---
+- name: Get Node Details
+  ansible.builtin.setup:
+    gather_subset:
+      - min
+
 - name: Temporarily Install Required Packages
   vars:
     required_packages:
@@ -23,32 +28,9 @@
         name: "{{ missing_packages }}"
         state: present
 
-- name: Create Disk Symlink Map
-  block:
-    - name: Get Cloud-Init Signature
-      become: true
-      ansible.builtin.command: cloud-id
-      changed_when: false
-      register: cloud_id
-
-    - name: Get Virtualization Engine
-      become: true
-      ansible.builtin.command: systemd-detect-virt
-      changed_when: false
-      register: virtualization_engine
-
-    - name: Get Disk Devices
-      ansible.builtin.command: lsblk -Jo PATH,SERIAL,TYPE
-      changed_when: false
-      register: devices
-
-    - name: Create Symlink Map
-      ansible.builtin.set_fact:
-        symlink_map: "{{ devices.stdout | from_json | to_symlink_map(cloud_id.stdout, virtualization_engine.stdout) }}"
-
-    - name: Print Symlink Map
-      ansible.builtin.debug:
-        var: symlink_map
+- name: Create Symlink Map
+  ansible.builtin.set_fact:
+    symlink_map: "{{ ansible_facts | to_symlink_map }}"
 
 - name: Create Logical Volumes Iterable
   ansible.builtin.set_fact:

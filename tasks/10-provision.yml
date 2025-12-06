@@ -23,7 +23,7 @@
     - name: Create New Partitions
       become: true
       community.general.parted:
-        device: "{{ symlink_map['drive-' ~ item.value.interface] }}"
+        device: "{{ symlink_map[item.value.interface] }}"
         label: gpt
         number: 1
         state: present
@@ -35,7 +35,7 @@
       become: true
       community.general.lvg:
         vg: "vg_{{ item.key }}"
-        pvs: "{{ symlink_map['drive-' ~ item.value.interface] }}1"
+        pvs: "{{ symlink_map[item.value.interface] }}1"
       loop: "{{ data_vdisks | dict2items }}"
 
     - name: Create Logical Volumes in Volume Groups
